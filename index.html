@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Nathan Quiem · Marketing Digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #08090b;
+      --bg2: #0f1115;
+      --gold: #c8a84b;
+      --gold2: #e8c96a;
+      --purple: #a453f6;
+      --white: #f0ede6;
+      --muted: #6b6f7a;
+      --border: rgba(200, 168, 75, 0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Noise texture */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ── SPLASH ── */
+    .splash-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: splashOut 3.2s ease forwards;
+    }
+
+    .splash-screen img {
+      height: 180px;
+      width: auto;
+      animation: splashLogo 3s ease forwards;
+    }
+
+    @keyframes splashOut {
+      0%, 85% { opacity: 1; visibility: visible; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    @keyframes splashLogo {
+      0% { opacity: 0; transform: scale(0.85); }
+      25%, 75% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.15); }
+    }
+
+    @keyframes pageFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 0 0 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      animation: pageFadeIn 1s 2.5s ease-out forwards;
+    }
+
+    /* ── HEADER GLOW ── */
+    .hero-glow {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(ellipse at center, rgba(200,168,75,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 52px 24px 32px;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+
+    /* Photo ring */
+    .photo-wrap {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      margin-bottom: 22px;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .photo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: conic-gradient(var(--gold) 0deg, var(--gold2) 90deg, transparent 180deg, var(--gold) 360deg);
+      animation: spin 6s linear infinite;
+    }
+
+    .photo-wrap::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 50%;
+      background: var(--bg);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .photo-wrap img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      border: 3px solid var(--bg);
+    }
+
+    /* Tag */
+    .tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      background: rgba(200,168,75,0.08);
+      border: 1px solid rgba(200,168,75,0.2);
+      border-radius: 4px;
+      padding: 4px 10px;
+      margin-bottom: 12px;
+      animation: fadeUp 0.7s 0.1s ease both;
+      opacity: 0;
+    }
+
+    .name {
+      font-size: clamp(28px, 7vw, 34px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-align: center;
+      line-height: 1.1;
+      color: var(--white);
+      animation: fadeUp 0.7s 0.15s ease both;
+      opacity: 0;
+    }
+
+    .name span {
+      color: var(--gold);
+    }
+
+    .sub {
+      font-family: 'Fira Code', monospace;
+      font-size: 11.5px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 8px;
+      line-height: 1.6;
+      animation: fadeUp 0.7s 0.2s ease both;
+      opacity: 0;
+    }
+
+    .sub em {
+      color: rgba(200,168,75,0.7);
+      font-style: normal;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SERVICES ── */
+    .services {
+      width: 100%;
+      padding: 28px 20px 0;
+      animation: fadeUp 0.7s 0.3s ease both;
+      opacity: 0;
+    }
+
+    .section-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label::before {
+      content: '//';
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .service-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .service-item {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color 0.25s, background 0.25s;
+    }
+
+    .service-item:hover, .service-item[open] {
+      border-color: rgba(200,168,75,0.4);
+      background: rgba(200,168,75,0.04);
+    }
+
+    .service-summary {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 16px;
+      cursor: pointer;
+      list-style: none; /* remove default arrow */
+    }
+
+    /* Remove Safari default arrow */
+    .service-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .service-icon {
+      width: 34px;
+      height: 34px;
+      background: rgba(164,83,246,0.08); /* Using the purple tint here */
+      border: 1px solid rgba(164,83,246,0.18);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 15px;
+    }
+
+    .service-info {
+      flex: 1;
+    }
+
+    .service-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+
+    .service-arrow {
+      color: var(--purple);
+      opacity: 0.6;
+      font-size: 14px;
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+    }
+
+    .service-item[open] .service-arrow {
+      transform: rotate(90deg);
+    }
+
+    .service-details {
+      padding: 0 16px 16px 64px;
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+      animation: fadeUp 0.3s ease-out;
+    }
+
+    /* ── SOCIAL PROOF ── */
+    .social-proof {
+      width: 100%;
+      padding: 32px 0 0;
+      animation: fadeUp 0.7s 0.35s ease both;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    .social-proof .proof-header {
+      padding: 0 20px;
+      margin-bottom: 16px;
+    }
+
+    .proof-subtitle {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      margin-top: 4px;
+    }
+
+    .carousel-container {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .carousel-container::before,
+    .carousel-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .carousel-container::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg), transparent);
+    }
+    .carousel-container::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg), transparent);
+    }
+
+    .carousel-track {
+      display: inline-flex;
+      gap: 16px;
+      animation: scrollCarousel 15s linear infinite;
+    }
+
+    .carousel-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes scrollCarousel {
+      from { transform: translateX(0); }
+      to { transform: translateX(-680px); }
+    }
+
+    .logo-item {
+      width: 120px;
+      height: 60px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    .logo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      /* Truque CSS para inverter imagens de fundo branco p/ tema escuro */
+      filter: invert(1) grayscale(1) opacity(0.4);
+      transition: all 0.3s ease;
+    }
+
+    .logo-item.active {
+      background: #ffffff;
+      border-color: rgba(200,168,75,0.6);
+      transform: scale(1.05);
+      z-index: 10;
+    }
+
+    .logo-item.active img {
+      filter: invert(0) grayscale(0) opacity(1);
+      object-fit: contain;
+      padding: 4px;
+    }
+
+    /* ── CTA ── */
+    .cta {
+      width: 100%;
+      padding: 24px 20px 0;
+      animation: fadeUp 0.7s 0.4s ease both;
+      opacity: 0;
+    }
+
+    .cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 100%);
+      border: 1px solid var(--gold);
+      border-radius: 12px;
+      color: #08090b;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(200,168,75,0.3);
+    }
+
+    .cta-btn:active { transform: translateY(0); }
+
+    /* ── SITE LINK ── */
+    .site-link {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 13px 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      font-family: 'Fira Code', monospace;
+      font-size: 11.5px;
+      text-decoration: none;
+      width: 100%;
+      transition: all 0.25s;
+    }
+
+    .site-link:hover {
+      color: var(--gold);
+      border-color: rgba(200,168,75,0.4);
+      background: rgba(200,168,75,0.03);
+    }
+
+    /* ── MICROCOPY ── */
+    .microcopy {
+      font-family: 'Fira Code', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .microcopy span {
+      color: var(--purple);
+    }
+
+    /* ── SUPER SUBTEXT ── */
+    .hero-subtext {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 16px;
+      line-height: 1.5;
+      animation: fadeUp 0.7s 0.25s ease both;
+      opacity: 0;
+      max-width: 90%;
+    }
+
+    .hero-support {
+      font-size: 10px;
+      color: rgba(107,111,122,0.8);
+      margin-bottom: 12px;
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      animation: fadeUp 0.7s 0.5s ease both;
+      opacity: 0;
+    }
+
+    .footer-logo {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .footer-logo strong {
+      color: var(--gold);
+    }
+
+    .footer-sub {
+      font-family: 'Fira Code', monospace;
+      font-size: 9.5px;
+      color: rgba(107,111,122,0.5);
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+  <!-- SPLASH SCREEN -->
+  <div class="splash-screen">
+    <img src="https://nathanquiem.com.br/wp-content/uploads/2026/02/Raposa.png" alt="Raposa">
+  </div>
+
+  <div class="page">
+    <div class="hero-glow"></div>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="photo-wrap">
+        <img src="https://nathanquiem.com.br/wp-content/uploads/2026/03/nathan.jpg" alt="Nathan Quiem" />
+      </div>
+      <div class="tag">// mktg_digital · automação · vendas</div>
+      <img src="https://nathanquiem.com.br/wp-content/uploads/2026/03/cartao-de-visita-2.png" alt="Nathan Quiem" style="height: 79px; width: auto; margin-bottom: 8px; animation: fadeUp 0.7s 0.15s ease both; opacity: 0;" />
+      <p class="sub"><em style="color: var(--purple);">Estruture, automatize e escale suas vendas com estratégia</em></p>
+      
+      <div class="hero-subtext">
+        Soluções sob medida para atrair, converter e vender todos os dias
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services">
+      <p class="section-label">Serviços</p>
+      <div class="service-list">
+        <details class="service-item">
+          <summary class="service-summary">
+            <div class="service-icon">📣</div>
+            <div class="service-info">
+              <div class="service-name">Gestão de Anúncios</div>
+            </div>
+            <div class="service-arrow">›</div>
+          </summary>
+          <div class="service-details">
+            Criação e otimização de campanhas no Meta Ads e Google Ads para atrair clientes prontos para comprar.<br/>
+            Foco em reduzir custo por lead e aumentar suas vendas com estratégia e dados.
+          </div>
+        </details>
+
+        <details class="service-item">
+          <summary class="service-summary">
+            <div class="service-icon">🌐</div>
+            <div class="service-info">
+              <div class="service-name">Criação de Sites</div>
+            </div>
+            <div class="service-arrow">›</div>
+          </summary>
+          <div class="service-details">
+            Desenvolvimento de landing pages e sites pensados para conversão.<br/>
+            Cada página é estruturada para transformar visitantes em leads e clientes.
+          </div>
+        </details>
+
+        <details class="service-item">
+          <summary class="service-summary">
+            <div class="service-icon">⚙️</div>
+            <div class="service-info">
+              <div class="service-name">Implantação de CRM</div>
+            </div>
+            <div class="service-arrow">›</div>
+          </summary>
+          <div class="service-details">
+            Organização do seu processo comercial com funil estruturado e gestão de leads.<br/>
+            Saiba exatamente em que etapa está cada cliente e aumente suas chances de fechamento.
+          </div>
+        </details>
+
+        <details class="service-item">
+          <summary class="service-summary">
+            <div class="service-icon">🤖</div>
+            <div class="service-info">
+              <div class="service-name">Automação de Atendimento</div>
+            </div>
+            <div class="service-arrow">›</div>
+          </summary>
+          <div class="service-details">
+            Criação de fluxos automáticos no WhatsApp para atender, qualificar e responder clientes 24h por dia.<br/>
+            Mais agilidade, menos perda de oportunidades.
+          </div>
+        </details>
+
+        <details class="service-item">
+          <summary class="service-summary">
+            <div class="service-icon">🔄</div>
+            <div class="service-info">
+              <div class="service-name">Automação de Processos</div>
+            </div>
+            <div class="service-arrow">›</div>
+          </summary>
+          <div class="service-details">
+            Automatização de tarefas e processos repetitivos no seu negócio.<br/>
+            Integrações entre sistemas, redução de trabalho manual e ganho de eficiência no dia a dia.
+          </div>
+        </details>
+
+        <details class="service-item">
+          <summary class="service-summary">
+            <div class="service-icon">💻</div>
+            <div class="service-info">
+              <div class="service-name">Aplicação Web</div>
+            </div>
+            <div class="service-arrow">›</div>
+          </summary>
+          <div class="service-details">
+            Desenvolvimento de sistemas e soluções personalizadas para o seu negócio.<br/>
+            Ideal para quem precisa de ferramentas sob medida para escalar.
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- SOCIAL PROOF -->
+    <section class="social-proof">
+      <div class="proof-header">
+        <p class="section-label">Cases</p>
+        <h2 class="proof-subtitle">Empresas que confiam no meu serviço</h2>
+      </div>
+      <div class="carousel-container">
+        <div class="carousel-track">
+          <!-- Item sequence 1..5 -->
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/02/20.jpg" alt="Case 1">
+          </div>
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/02/21.jpg" alt="Case 2">
+          </div>
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/02/22.jpg" alt="Case 3">
+          </div>
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/03/cartao-de-visita-2.jpg" alt="Case 4">
+          </div>
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/02/23.jpg" alt="Case 5">
+          </div>
+          
+          <!-- Duplicates for seamless looping -->
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/02/20.jpg" alt="Case 1 D">
+          </div>
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/02/21.jpg" alt="Case 2 D">
+          </div>
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/02/22.jpg" alt="Case 3 D">
+          </div>
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/03/cartao-de-visita-2.jpg" alt="Case 4 D">
+          </div>
+          <div class="logo-item" onclick="this.classList.toggle('active')">
+            <img src="https://nathanquiem.com.br/wp-content/uploads/2026/02/23.jpg" alt="Case 5 D">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="hero-support">Do primeiro contato do cliente ao fechamento: tecnologia a seu favor</div>
+      <a class="cta-btn" href="https://api.whatsapp.com/send/?phone=5511959482757&text=Ol%C3%A1%2C+gostaria+de+mais+informa%C3%A7%C3%B5es+sobre+os+seus+servi%C3%A7os." target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Falar no WhatsApp
+      </a>
+      <a class="site-link" href="https://nathanquiem.com.br" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Acessar site
+      </a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-logo">// <strong>Nathan.Quiem</strong></div>
+    </footer>
+  </div>
+</body>
+</html>
