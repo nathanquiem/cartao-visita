@@ -90,14 +90,12 @@
     /* ── HEADER GLOW ── */
     .hero-glow {
       position: absolute;
-      top: -80px;
+      top: -60px;
       left: 50%;
       transform: translateX(-50%);
-      width: 360px;
-      height: 360px;
+      width: 300px;
+      height: 300px;
       pointer-events: none;
-      overflow: hidden;
-      border-radius: 50%;
     }
 
     .hero-glow::before {
@@ -115,14 +113,14 @@
         transparent 75%,
         rgba(200,168,75,0.16)
       );
-      filter: blur(40px);
+      filter: blur(20px);
       animation: glowRotate 12s linear infinite;
     }
 
     .hero-glow::after {
       content: '';
       position: absolute;
-      inset: 30px;
+      inset: 20px;
       border-radius: 50%;
       background: radial-gradient(ellipse at center, rgba(200,168,75,0.22) 0%, rgba(164,83,246,0.06) 45%, transparent 70%);
       animation: glowBreath 4s ease-in-out infinite;
